@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using System.Collections;
 
+
 [System.Serializable]
 public class ToggleEvent : UnityEvent<bool>{ }
 
@@ -23,8 +24,10 @@ public class PlayerNet : NetworkBehaviour {
     }
 
     void DisablePlayer() {
-        if(isLocalPlayer)
+        if(isLocalPlayer) {
             mainCamera.SetActive(true);
+            
+        }
 
         onToggleShared.Invoke(false);
 
@@ -35,8 +38,11 @@ public class PlayerNet : NetworkBehaviour {
     }
 
     void EnablePlayer() {
-        if(isLocalPlayer)
+
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+        if(isLocalPlayer) {
             mainCamera.SetActive(false);
+        }
 
         onToggleShared.Invoke(true);
 
@@ -46,7 +52,6 @@ public class PlayerNet : NetworkBehaviour {
             onToggleRemote.Invoke(true);
             name = "Dummy";
         }
-            
     }
 
     public void Die() {
@@ -61,6 +66,8 @@ public class PlayerNet : NetworkBehaviour {
             Transform spawn = NetworkManager.singleton.GetStartPosition();
             transform.position = spawn.position;
             transform.rotation = spawn.rotation;
+
+            
         }
 
         EnablePlayer();
