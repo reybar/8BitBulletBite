@@ -7,17 +7,6 @@ public class Projectile : NetworkBehaviour {
 
     public int damage;
 
-	// Use this for initialization
-	void Start () {
-        
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    
     private void OnTriggerEnter2D(Collider2D coll) {
         Debug.Log(coll.gameObject.name, gameObject);
         if(coll.tag == "Player") {
