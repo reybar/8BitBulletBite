@@ -48,6 +48,8 @@ public class PlayerController : NetworkBehaviour {
 
     // Update is called once per frame
     void Update() {
+
+        
         if(!isLocalPlayer) {
             return;
         }
@@ -55,7 +57,7 @@ public class PlayerController : NetworkBehaviour {
         if(isGrounded && moveDir == 0 && !isInMotion) {
             rBody.velocity = new Vector2(rBody.velocity.x*0.5f, rBody.velocity.y);
         }
-
+        
 
         CollisionChecking();
         

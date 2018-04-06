@@ -55,3 +55,6 @@ TagManager:
   - name: World
     uniqueID: 2649270035
     locked: 0
+  - name: Weapons
+    uniqueID: 39296341
+    locked: 0
