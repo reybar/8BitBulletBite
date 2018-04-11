@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 114673097829970492}
   - component: {fileID: 114528814168275890}
   - component: {fileID: 114397209317909726}
+  - component: {fileID: 114634205860572040}
   m_Layer: 8
   m_Name: Character
   m_TagString: Player
@@ -909,6 +910,34 @@ MonoBehaviour:
     m_TypeName: ToggleEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   respawnTime: 5
   mainCamera: {fileID: 0}
+--- !u!114 &114634205860572040
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1586880943820970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eaf0b82e03baa84d95076659147f162, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorer: {fileID: 0}
+  colorPattern1:
+  - {r: 0.034482475, g: 0, b: 1, a: 1}
+  - {r: 0, g: 0.27839753, b: 0.66176474, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  colorPattern2:
+  - {r: 0.46906707, g: 0, b: 0.5441177, a: 1}
+  - {r: 0.8561196, g: 0.031898767, b: 0.86764705, a: 1}
+  - {r: 0.87525356, g: 1, b: 0.09558821, a: 1}
+  colorPattern3:
+  - {r: 0.17830881, g: 0.71323526, b: 0.42548177, a: 1}
+  - {r: 0.24178201, g: 0.7647059, b: 0.5699618, a: 1}
+  - {r: 0.08637384, g: 0.024654001, b: 0.83823526, a: 1}
+  colorPattern4:
+  - {r: 0.36764705, g: 0.36764705, b: 0.36764705, a: 1}
+  - {r: 0.5441177, g: 0.504109, b: 0.504109, a: 1}
+  - {r: 0.027032897, g: 0.80837613, b: 0.9191176, a: 1}
 --- !u!114 &114673097829970492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1109,7 +1138,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e42d2efe47f5dfa4db2348fb0de03dd6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1128,12 +1157,12 @@ SpriteRenderer:
   m_SortingLayerID: -710312379
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 246af19200aa6914aaa845e349664acd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2f806f9571056244d8017e6e0ae93b03, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.88, y: 1.86}
+  m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1151,7 +1180,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
