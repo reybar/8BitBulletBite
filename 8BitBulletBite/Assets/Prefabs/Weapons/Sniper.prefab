@@ -162,6 +162,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294966783
   laser: {fileID: 0}
+  laserHit: {fileID: 0}
 --- !u!114 &114755426299276436
 MonoBehaviour:
   m_ObjectHideFlags: 1
