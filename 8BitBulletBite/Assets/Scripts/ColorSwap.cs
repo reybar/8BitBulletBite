@@ -10,13 +10,14 @@ public class ColorSwap : MonoBehaviour {
     public Color[] colorPattern2;
     public Color[] colorPattern3;
     public Color[] colorPattern4;
+    public int colorNum;
 
     // Use this for initialization
     void Start () {
         body = transform.Find("Body");
         colorer = body.GetComponent<Renderer>().material;
         int rand = Random.Range(0, 4);
-        switch(rand) {
+        switch(colorNum) {
             case 0:
                 ColorIn(colorPattern1);
                 break;
