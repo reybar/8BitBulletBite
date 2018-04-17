@@ -5,9 +5,9 @@ using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour {
 
-    
-    public int jumpVelocity=8;
-    public int movementSpeed=20;
+
+    public int jumpVelocity = 8;
+    public int movementSpeed = 20;
     public int acceleration = 50;
     public int gravityMultiplier = 3;
 
@@ -35,7 +35,7 @@ public class PlayerController : NetworkBehaviour {
     private Rigidbody2D rBody;
     [SyncVar(hook = "OnUpdateScale")]
     private float scale;
-    
+
 
 
     // Use this for initialization
@@ -43,25 +43,21 @@ public class PlayerController : NetworkBehaviour {
         rBody = GetComponent<Rigidbody2D>();
         characterBody = transform.Find("Body");
         groundChecker = characterBody.transform.Find("Ground Checker");
-        wallChecker = characterBody.transform.Find("Wall Checker");        
+        wallChecker = characterBody.transform.Find("Wall Checker");
     }
 
     // Update is called once per frame
     void Update() {
-
-        
         if(!isLocalPlayer) {
             return;
         }
-        
-        if(isGrounded && moveDir == 0 && !isInMotion) {
-            rBody.velocity = new Vector2(rBody.velocity.x*0.5f, rBody.velocity.y);
-        }
-        
 
         CollisionChecking();
-        
+
         if(!isInMotion) {
+            if(isGrounded && moveDir == 0) {
+                rBody.velocity = new Vector2(rBody.velocity.x * 0.5f, rBody.velocity.y);
+            }
             Jump();
             Dashing();
             WallJumping();
@@ -81,17 +77,17 @@ public class PlayerController : NetworkBehaviour {
 
             Run();
             Falling();
-        }     
+        }
     }
 
 
 
     void Flip() {
         facingRight = !facingRight;
-        characterBody.transform.localScale = new Vector2(characterBody.transform.localScale.x *-1,characterBody.transform.localScale.y);
+        characterBody.transform.localScale = new Vector2(characterBody.transform.localScale.x * -1, characterBody.transform.localScale.y);
 
         CmdScale(characterBody.transform.localScale.x);
-        }
+    }
 
 
     [Command]
@@ -114,7 +110,7 @@ public class PlayerController : NetworkBehaviour {
             rBody.AddForce(new Vector2(moveDir, 0) * acceleration);
         }
         else {
-            rBody.AddForce(new Vector2(moveDir, 0) * (acceleration-10));
+            rBody.AddForce(new Vector2(moveDir, 0) * (acceleration - 10));
         }
 
 
@@ -124,8 +120,8 @@ public class PlayerController : NetworkBehaviour {
         else if(moveDir < 0 && facingRight) {
             Flip();
         }
-        
-        
+
+
     }
 
     void Jump() {
@@ -137,7 +133,7 @@ public class PlayerController : NetworkBehaviour {
             else if(!isGrounded && extraJump) {
                 rBody.velocity = new Vector2(rBody.velocity.x, 0);
                 rBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
-                extraJump =false;
+                extraJump = false;
             }
         }
     }
@@ -148,11 +144,11 @@ public class PlayerController : NetworkBehaviour {
             rBody.velocity = new Vector2(0, 0);
             if(facingRight) {
                 Flip();
-                rBody.AddForce(new Vector2(-wallJumpVelocity, wallJumpVelocity-5), ForceMode2D.Impulse);
+                rBody.AddForce(new Vector2(-wallJumpVelocity, wallJumpVelocity - 5), ForceMode2D.Impulse);
             }
             else {
                 Flip();
-                rBody.AddForce(new Vector2(wallJumpVelocity, wallJumpVelocity-5), ForceMode2D.Impulse);
+                rBody.AddForce(new Vector2(wallJumpVelocity, wallJumpVelocity - 5), ForceMode2D.Impulse);
             }
             StartCoroutine(WallJump(wallJumpTime));
         }
@@ -165,8 +161,8 @@ public class PlayerController : NetworkBehaviour {
 
     void Falling() {
         if(wallRide) {
-            
-            rBody.gravityScale = 3f; 
+
+            rBody.gravityScale = 3f;
         }
         else if(rBody.velocity.y < 0) {
             rBody.gravityScale = gravityMultiplier;
@@ -175,7 +171,7 @@ public class PlayerController : NetworkBehaviour {
 
             rBody.gravityScale = gravityMultiplier;
         }
-        else if(rBody.velocity.y>0) {
+        else if(rBody.velocity.y > 0) {
             rBody.gravityScale = 3f;
         }
         else {
@@ -199,10 +195,10 @@ public class PlayerController : NetworkBehaviour {
             }
 
             StartCoroutine(Dash(dashTime));
-            
-            
+
+
         }
-        
+
     }
 
     IEnumerator Dash(float dashTime) {
@@ -214,14 +210,14 @@ public class PlayerController : NetworkBehaviour {
         dashCD = false;
     }
 
-   
+
 
     void CollisionChecking() {
         isGrounded = Physics2D.OverlapCircle(groundChecker.position, collisionRadius, whatIsGround);
 
         if(isGrounded) {
             extraJump = true;
-            wallRide = false;            
+            wallRide = false;
         }
         else {
             wallRide = Physics2D.OverlapCircle(wallChecker.position, collisionRadius, whatIsWall);

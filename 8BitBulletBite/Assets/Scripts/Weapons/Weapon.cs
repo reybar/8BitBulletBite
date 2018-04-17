@@ -18,26 +18,24 @@ public class Weapon : MonoBehaviour {
     public int bulletDamage;
 
     public int throwSpeed = 30;
-    public int throwDamage=2;
+    public int throwDamage = 2;
 
     protected Vector2 mousePosition;
 
     public bool gotAmmo = true;
     public bool reloading = false;
-    public bool ready=true;
+    public bool ready = true;
 
     private float lastShot;
     private float rotation;
     private Vector2 direction;
 
     public ShootingNET shoot;
-    
+
     public bool exists = true;
-    
-    
-    public virtual void Start () {
-        
-        
+
+
+    public virtual void Start() {
         player = transform.root.gameObject;
         firePoint = transform.Find("FirePoint");
         if(player.GetComponent<ShootingNET>()) {
@@ -53,22 +51,19 @@ public class Weapon : MonoBehaviour {
             shoot.throwDamage = throwDamage;
         }
         ammo = magSize;
-        
-
     }
 
-	public virtual void Update () {
+    public virtual void Update() {
         CheckAmmo();
         getDirections();
-        
+
         Reload();
 
         if(player.GetComponent<NetworkIdentity>().isLocalPlayer) {
             Throw();
             Shoot();
         }
-        
-	}
+    }
 
     private void OnEnable() {
         player = transform.root.gameObject;
@@ -86,7 +81,7 @@ public class Weapon : MonoBehaviour {
             shoot.throwDamage = throwDamage;
         }
         reloading = false;
-        if(ammo<=0) {
+        if(ammo <= 0) {
             StartCoroutine(IReload());
         }
         else {
@@ -105,9 +100,9 @@ public class Weapon : MonoBehaviour {
 
     void Shoot() {
 
-        if(Input.GetButton("Fire1") && (Time.time > (fireRate + lastShot)) && ammo > 0 && !reloading && ready ) { 
-            shoot.CmdShoot(firePoint.position ,direction, rotation);
-            
+        if(Input.GetButton("Fire1") && (Time.time > (fireRate + lastShot)) && ammo > 0 && !reloading && ready) {
+            shoot.CmdShoot(firePoint.position, direction, rotation);
+
             lastShot = Time.time;
             ammo--;
             if(ammo <= 0) {
@@ -115,16 +110,16 @@ public class Weapon : MonoBehaviour {
             }
         }
     }
-    
+
     void Throw() {
         if(Input.GetButtonDown("Throw")) {
-            shoot.CmdThrow(firePoint.position ,direction, rotation);
-            
+            shoot.CmdThrow(firePoint.position, direction, rotation);
+
         }
     }
 
     void Reload() {
-        if(Input.GetButtonDown("Reload")&& ammo<magSize && !reloading) {
+        if(Input.GetButtonDown("Reload") && ammo < magSize && !reloading) {
             StartCoroutine(IReload());
         }
     }

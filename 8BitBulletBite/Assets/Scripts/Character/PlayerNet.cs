@@ -6,7 +6,7 @@ using System.Collections;
 
 
 [System.Serializable]
-public class ToggleEvent : UnityEvent<bool>{ }
+public class ToggleEvent : UnityEvent<bool> { }
 
 public class PlayerNet : NetworkBehaviour {
     [SerializeField] ToggleEvent onToggleShared;
@@ -15,7 +15,7 @@ public class PlayerNet : NetworkBehaviour {
     [SerializeField] float respawnTime = 5f;
 
     public GameObject mainCamera;
-    
+
 
     void Start() {
         mainCamera = Camera.main.gameObject;
@@ -26,7 +26,7 @@ public class PlayerNet : NetworkBehaviour {
     void DisablePlayer() {
         if(isLocalPlayer) {
             mainCamera.SetActive(true);
-            
+
         }
 
         onToggleShared.Invoke(false);
@@ -39,7 +39,7 @@ public class PlayerNet : NetworkBehaviour {
 
     void EnablePlayer() {
 
-        GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         if(isLocalPlayer) {
             mainCamera.SetActive(false);
         }
@@ -55,7 +55,7 @@ public class PlayerNet : NetworkBehaviour {
     }
 
     public void Die() {
-        
+
         DisablePlayer();
 
         Invoke("Respawn", respawnTime);
@@ -67,7 +67,7 @@ public class PlayerNet : NetworkBehaviour {
             transform.position = spawn.position;
             transform.rotation = spawn.rotation;
 
-            
+
         }
 
         EnablePlayer();

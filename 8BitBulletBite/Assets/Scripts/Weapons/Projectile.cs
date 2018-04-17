@@ -10,7 +10,7 @@ public class Projectile : NetworkBehaviour {
     private void OnTriggerEnter2D(Collider2D coll) {
         Debug.Log(coll.gameObject.name, gameObject);
         if(coll.tag == "Player") {
-            coll.GetComponent<Health>().currHealth -=damage;
+            coll.GetComponent<Health>().currHealth -= damage;
             Destroy(gameObject);
         }
         else {
@@ -19,5 +19,5 @@ public class Projectile : NetworkBehaviour {
     }
     //TODO change collision tag to Player when implemented
     //TODO destroy bullets on screen edge
-    
+
 }

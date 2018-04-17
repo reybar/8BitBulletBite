@@ -9,41 +9,40 @@ public class Sniper : Weapon {
     public Transform laser;
     public Transform laserHit;
     private LineRenderer laserRenderer;
-    
+
 
     // Use this for initialization
     public override void Start() {
         base.Start();
-        
+
         laser = transform.Find("Laser");
-        if(laser.GetComponent<LineRenderer>() ) {
+        if(laser.GetComponent<LineRenderer>()) {
             laserRenderer = laser.GetComponent<LineRenderer>();
         }
 
-        laserRenderer.useWorldSpace = true;    
+        laserRenderer.useWorldSpace = true;
 
     }
 
     // Update is called once per frame
     public override void Update() {
         base.Update();
-        RaycastHit2D hit = Physics2D.Raycast(laser.transform.position, transform.right, 30,laserCollision);
-        
-        if(hit.collider ) {
-            laserRenderer.SetPosition(0,laser.transform.position);
+        RaycastHit2D hit = Physics2D.Raycast(laser.transform.position, transform.right, 30, laserCollision);
+
+        if(hit.collider) {
+            laserRenderer.SetPosition(0, laser.transform.position);
             laserRenderer.SetPosition(1, hit.point);
         }
         else {
-            Vector2 endPos =new Vector2 (laser.transform.localPosition.x + 30, laser.transform.localPosition.y);
             laserRenderer.SetPosition(0, laser.transform.position);
-            laserRenderer.SetPosition(1, laser.transform.position+transform.right*30);
+            laserRenderer.SetPosition(1, laser.transform.position + transform.right * 30);
 
             //TODO laser end at screen edge
 
 
         }
-        
+
     }
 
-    
+
 }

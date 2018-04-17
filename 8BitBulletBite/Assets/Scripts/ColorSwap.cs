@@ -13,10 +13,9 @@ public class ColorSwap : MonoBehaviour {
     public int colorNum;
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         body = transform.Find("Body");
         colorer = body.GetComponent<Renderer>().material;
-        int rand = Random.Range(0, 4);
         switch(colorNum) {
             case 0:
                 ColorIn(colorPattern1);
@@ -32,7 +31,7 @@ public class ColorSwap : MonoBehaviour {
                 break;
 
         }
-        
+
     }
 
     void ColorIn(Color[] palette) {

@@ -35,12 +35,11 @@ public class SetupLocalPlayer : NetworkBehaviour {
 
 
     // Use this for initialization
-    void Start () 
-	{
+    void Start() {
         colorSwap = GetComponent<ColorSwap>();
-        
 
-        if(playerColor==Color.blue) {
+
+        if(playerColor == Color.blue) {
             colorSwap.colorNum = 0;
         }
         else if(playerColor == Color.magenta) {
@@ -55,12 +54,12 @@ public class SetupLocalPlayer : NetworkBehaviour {
 
 
         Renderer[] rends = GetComponentsInChildren<Renderer>();
-		foreach (Renderer r in rends)
-			r.material.color = playerColor;
-		
-	}
+        foreach(Renderer r in rends)
+            r.material.color = playerColor;
 
-	/*void Update()
+    }
+
+    /*void Update()
 	{
 		this.GetComponentInChildren<TextMesh>().text = pname;
 	}*/
@@ -71,4 +70,4 @@ public class SetupLocalPlayer : NetworkBehaviour {
 
 
 
-			//SmoothCameraFollow.target = this.transform;
+//SmoothCameraFollow.target = this.transform;

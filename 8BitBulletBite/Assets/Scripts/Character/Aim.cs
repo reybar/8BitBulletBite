@@ -5,8 +5,8 @@ using UnityEngine.Networking;
 
 public class Aim : NetworkBehaviour {
 
-    [SerializeField]private Transform pivot;
-    [SerializeField]private Transform weaponLoc;
+    [SerializeField] private Transform pivot;
+    [SerializeField] private Transform weaponLoc;
 
     [SyncVar(hook = "OnUpdateScale")]
     private float scale;
@@ -17,7 +17,7 @@ public class Aim : NetworkBehaviour {
         pivot = transform.Find("Weapon pivot");
         weaponLoc = pivot.transform.Find("Weapon");
         scale = weaponLoc.transform.localScale.y;
-        
+
     }
 
     private void Update() {
@@ -42,18 +42,17 @@ public class Aim : NetworkBehaviour {
         }
 
         CmdScale(weaponLoc.transform.localScale.y);
-        
+
     }
 
-   [Command]
+    [Command]
     void CmdScale(float newScale) {
         scale = newScale;
     }
 
     void OnUpdateScale(float newScale) {
         scale = newScale;
-        weaponLoc.transform.localScale = new Vector2(1,scale);
+        weaponLoc.transform.localScale = new Vector2(1, scale);
     }
 
 }
- 
