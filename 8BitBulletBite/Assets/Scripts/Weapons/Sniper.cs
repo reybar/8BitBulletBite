@@ -20,24 +20,24 @@ public class Sniper : Weapon {
             laserRenderer = laser.GetComponent<LineRenderer>();
         }
 
-        laserRenderer.useWorldSpace = false;    
+        laserRenderer.useWorldSpace = true;    
 
     }
 
     // Update is called once per frame
     public override void Update() {
         base.Update();
-        //Vector2 laserOrigin = new Vector2(laser.position.x, laser.position.y);
         RaycastHit2D hit = Physics2D.Raycast(laser.transform.position, transform.right, 30,laserCollision);
         
         if(hit.collider ) {
-            Debug.DrawLine(laser.transform.position, hit.point, new Color(0,0,0));
-            laserRenderer.SetPosition(0,new Vector2(hit.distance, 0));
-            //laserRenderer.SetPosition(0,laser.transform.position);
-            //laserRenderer.SetPosition(1, hit.point);
+            laserRenderer.SetPosition(0,laser.transform.position);
+            laserRenderer.SetPosition(1, hit.point);
         }
         else {
-            laserRenderer.SetPosition(0, new Vector2 (30, 0));
+            Vector2 endPos =new Vector2 (laser.transform.localPosition.x + 30, laser.transform.localPosition.y);
+            laserRenderer.SetPosition(0, laser.transform.position);
+            laserRenderer.SetPosition(1, laser.transform.position+transform.right*30);
+
             //TODO laser end at screen edge
 
 
