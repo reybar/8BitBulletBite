@@ -3,54 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Aim : NetworkBehaviour {
+public class Aim : NetworkBehaviour
+{
+    [SerializeField]
+    private Transform pivot;
+    [SerializeField]
+    private Transform weaponLoc;
 
-    [SerializeField] private Transform pivot;
-    [SerializeField] private Transform weaponLoc;
-
-    [SyncVar(hook = "OnUpdateScale")]
+    [SyncVar(hook = "OnFlip")]
     private float scale;
 
-
-
-    private void Start() {
-        pivot = transform.Find("Weapon pivot");
-        weaponLoc = pivot.transform.Find("Weapon");
+    private void Start()
+    {
         scale = weaponLoc.transform.localScale.y;
-
     }
 
-    private void Update() {
-        if(!isLocalPlayer) {
+    private void Update()
+    {
+        if (!isLocalPlayer) {
             return;
         }
         Rotate();
     }
 
-    void Rotate() {
-
+    void Rotate()
+    {
         Vector2 distance = Camera.main.ScreenToWorldPoint(Input.mousePosition) - pivot.transform.position;
         distance.Normalize();
         float rotation = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
         pivot.transform.rotation = Quaternion.Euler(0, 0, rotation);
 
-        if(rotation > 90 || rotation < -90) {
+        if (rotation > 90 || rotation < -90) {
             weaponLoc.transform.localScale = new Vector2(1, -1);
-        }
-        else {
+        } else {
             weaponLoc.transform.localScale = new Vector2(1, 1);
         }
-
-        CmdScale(weaponLoc.transform.localScale.y);
-
+        CmdFlip(weaponLoc.transform.localScale.y);
     }
 
     [Command]
-    void CmdScale(float newScale) {
+    void CmdFlip(float newScale)
+    {
         scale = newScale;
     }
 
-    void OnUpdateScale(float newScale) {
+    void OnFlip(float newScale)
+    {
         scale = newScale;
         weaponLoc.transform.localScale = new Vector2(1, scale);
     }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerController : NetworkBehaviour {
+public class PlayerController : NetworkBehaviour
+{
 
 
     public int jumpVelocity = 8;
@@ -39,7 +40,8 @@ public class PlayerController : NetworkBehaviour {
 
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         rBody = GetComponent<Rigidbody2D>();
         characterBody = transform.Find("Body");
         groundChecker = characterBody.transform.Find("Ground Checker");
@@ -47,15 +49,16 @@ public class PlayerController : NetworkBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
-        if(!isLocalPlayer) {
+    void Update()
+    {
+        if (!isLocalPlayer) {
             return;
         }
 
         CollisionChecking();
 
-        if(!isInMotion) {
-            if(isGrounded && moveDir == 0) {
+        if (!isInMotion) {
+            if (isGrounded && moveDir == 0) {
                 rBody.velocity = new Vector2(rBody.velocity.x * 0.5f, rBody.velocity.y);
             }
             Jump();
@@ -64,13 +67,14 @@ public class PlayerController : NetworkBehaviour {
         }
     }
 
-    private void FixedUpdate() {
+    private void FixedUpdate()
+    {
 
-        if(!isLocalPlayer) {
+        if (!isLocalPlayer) {
             return;
         }
 
-        if(!isInMotion) {
+        if (!isInMotion) {
 
             //max speed
             rBody.velocity = new Vector2(Mathf.Clamp(rBody.velocity.x, -movementSpeed, movementSpeed), rBody.velocity.y);
@@ -82,7 +86,8 @@ public class PlayerController : NetworkBehaviour {
 
 
 
-    void Flip() {
+    void Flip()
+    {
         facingRight = !facingRight;
         characterBody.transform.localScale = new Vector2(characterBody.transform.localScale.x * -1, characterBody.transform.localScale.y);
 
@@ -91,46 +96,47 @@ public class PlayerController : NetworkBehaviour {
 
 
     [Command]
-    void CmdScale(float newScale) {
+    void CmdScale(float newScale)
+    {
         scale = newScale;
     }
 
-    void OnUpdateScale(float newScale) {
+    void OnUpdateScale(float newScale)
+    {
         scale = newScale;
         characterBody.transform.localScale = new Vector2(scale, characterBody.transform.localScale.y);
     }
 
-    void Run() {
+    void Run()
+    {
 
 
 
         moveDir = Input.GetAxis("Horizontal");
 
-        if(isGrounded) {
+        if (isGrounded) {
             rBody.AddForce(new Vector2(moveDir, 0) * acceleration);
-        }
-        else {
+        } else {
             rBody.AddForce(new Vector2(moveDir, 0) * (acceleration - 10));
         }
 
 
-        if(moveDir > 0 && !facingRight) {
+        if (moveDir > 0 && !facingRight) {
             Flip();
-        }
-        else if(moveDir < 0 && facingRight) {
+        } else if (moveDir < 0 && facingRight) {
             Flip();
         }
 
 
     }
 
-    void Jump() {
-        if(Input.GetButtonDown("Jump") && !wallRide) {
-            if(isGrounded) {
+    void Jump()
+    {
+        if (Input.GetButtonDown("Jump") && !wallRide) {
+            if (isGrounded) {
                 rBody.velocity = new Vector2(rBody.velocity.x, 0);
                 rBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
-            }
-            else if(!isGrounded && extraJump) {
+            } else if (!isGrounded && extraJump) {
                 rBody.velocity = new Vector2(rBody.velocity.x, 0);
                 rBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
                 extraJump = false;
@@ -138,15 +144,15 @@ public class PlayerController : NetworkBehaviour {
         }
     }
 
-    void WallJumping() {
-        if(Input.GetButtonDown("Jump") && wallRide) {
+    void WallJumping()
+    {
+        if (Input.GetButtonDown("Jump") && wallRide) {
             isInMotion = true;
             rBody.velocity = new Vector2(0, 0);
-            if(facingRight) {
+            if (facingRight) {
                 Flip();
                 rBody.AddForce(new Vector2(-wallJumpVelocity, wallJumpVelocity - 5), ForceMode2D.Impulse);
-            }
-            else {
+            } else {
                 Flip();
                 rBody.AddForce(new Vector2(wallJumpVelocity, wallJumpVelocity - 5), ForceMode2D.Impulse);
             }
@@ -154,43 +160,41 @@ public class PlayerController : NetworkBehaviour {
         }
     }
 
-    IEnumerator WallJump(float walljumpTime) {
+    IEnumerator WallJump(float walljumpTime)
+    {
         yield return new WaitForSeconds(wallJumpTime);
         isInMotion = false;
     }
 
-    void Falling() {
-        if(wallRide) {
+    void Falling()
+    {
+        if (wallRide) {
 
             rBody.gravityScale = 3f;
-        }
-        else if(rBody.velocity.y < 0) {
+        } else if (rBody.velocity.y < 0) {
             rBody.gravityScale = gravityMultiplier;
-        }
-        else if(rBody.velocity.y > 0 && !Input.GetButton("Jump")) {
+        } else if (rBody.velocity.y > 0 && !Input.GetButton("Jump")) {
 
             rBody.gravityScale = gravityMultiplier;
-        }
-        else if(rBody.velocity.y > 0) {
+        } else if (rBody.velocity.y > 0) {
             rBody.gravityScale = 3f;
-        }
-        else {
+        } else {
             rBody.gravityScale = 1f;
         }
     }
 
-    void Dashing() {
-        if(Input.GetButtonDown("Dash") && !dashCD) {
+    void Dashing()
+    {
+        if (Input.GetButtonDown("Dash") && !dashCD) {
 
             dashCD = true;
             isInMotion = true;
             rBody.gravityScale = 0;
             rBody.velocity = new Vector2(0, rBody.velocity.y);
 
-            if(facingRight) {
+            if (facingRight) {
                 rBody.AddForce(Vector2.right * dashVelocity, ForceMode2D.Impulse);
-            }
-            else {
+            } else {
                 rBody.AddForce(Vector2.left * dashVelocity, ForceMode2D.Impulse);
             }
 
@@ -201,7 +205,8 @@ public class PlayerController : NetworkBehaviour {
 
     }
 
-    IEnumerator Dash(float dashTime) {
+    IEnumerator Dash(float dashTime)
+    {
         yield return new WaitForSeconds(dashTime);
         rBody.gravityScale = 1;
         isInMotion = false;
@@ -212,16 +217,16 @@ public class PlayerController : NetworkBehaviour {
 
 
 
-    void CollisionChecking() {
+    void CollisionChecking()
+    {
         isGrounded = Physics2D.OverlapCircle(groundChecker.position, collisionRadius, whatIsGround);
 
-        if(isGrounded) {
+        if (isGrounded) {
             extraJump = true;
             wallRide = false;
-        }
-        else {
+        } else {
             wallRide = Physics2D.OverlapCircle(wallChecker.position, collisionRadius, whatIsWall);
-            if(wallRide) {
+            if (wallRide) {
                 extraJump = true;
             }
         }

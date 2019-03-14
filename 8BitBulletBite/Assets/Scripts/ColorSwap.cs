@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColorSwap : MonoBehaviour {
-
+public class ColorSwap : MonoBehaviour
+{
     Transform body;
     public Material colorer;
     public Color[] colorPattern1;
@@ -12,11 +12,11 @@ public class ColorSwap : MonoBehaviour {
     public Color[] colorPattern4;
     public int colorNum;
 
-    // Use this for initialization
-    void Start() {
+    void Start()
+    {
         body = transform.Find("Body");
         colorer = body.GetComponent<Renderer>().material;
-        switch(colorNum) {
+        switch (colorNum) {
             case 0:
                 ColorIn(colorPattern1);
                 break;
@@ -29,12 +29,11 @@ public class ColorSwap : MonoBehaviour {
             case 3:
                 ColorIn(colorPattern4);
                 break;
-
         }
-
     }
 
-    void ColorIn(Color[] palette) {
+    void ColorIn(Color[] palette)
+    {
         colorer.SetColor("_Color1out", palette[0]);
         colorer.SetColor("_Color2out", palette[1]);
         colorer.SetColor("_Color3out", palette[2]);
