@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 114625571307334106}
   - component: {fileID: 114795013305420368}
   - component: {fileID: 114354031453245492}
+  - component: {fileID: 114704182795040886}
   - component: {fileID: 114616693938558290}
   - component: {fileID: 114549803557048130}
   - component: {fileID: 114327441783624718}
@@ -1001,6 +1002,18 @@ MonoBehaviour:
     i15: 127
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114704182795040886
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1586880943820970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e124141a3918a8488a7d9d132dceb40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponSync: {fileID: 114354031453245492}
 --- !u!114 &114773286455547420
 MonoBehaviour:
   m_ObjectHideFlags: 1

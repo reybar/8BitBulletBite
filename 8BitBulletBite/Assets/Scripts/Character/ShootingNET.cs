@@ -13,11 +13,11 @@ public class ShootingNET : NetworkBehaviour
     public int throwSpeed;
     public int throwDamage;
 
-    private WeaponPickup weaponPickup;
+    private WeaponSync weaponSync;
 
     private void Start()
     {
-        weaponPickup = GetComponent<WeaponPickup>();
+        weaponSync = GetComponent<WeaponSync>();
     }
 
     [Command]
@@ -34,10 +34,10 @@ public class ShootingNET : NetworkBehaviour
     [Command]
     public void CmdThrow(Vector2 firePoint, Vector2 direction, float rotation)
     {
-        if (weaponPickup.weapon1 != null && weaponPickup.weapon1.activeSelf) {
-            weaponPickup.slot1 = 0;
-        } else if (weaponPickup.weapon2 != null && weaponPickup.weapon2.activeSelf) {
-            weaponPickup.slot2 = 0;
+        if (weaponSync.weapon1 != null && weaponSync.weapon1.activeSelf) {
+            weaponSync.slot1 = 0;
+        } else if (weaponSync.weapon2 != null && weaponSync.weapon2.activeSelf) {
+            weaponSync.slot2 = 0;
         }
 
         GameObject thrown = Instantiate(weaponThrown, firePoint, Quaternion.Euler(0, 0, rotation)) as GameObject;

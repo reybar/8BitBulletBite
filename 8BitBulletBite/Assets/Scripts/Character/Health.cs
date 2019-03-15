@@ -49,8 +49,8 @@ public class Health : NetworkBehaviour {
 
     [ClientRpc]
     void RpcDie() {
-        GetComponent<WeaponPickup>().slot1 = 0;
-        GetComponent<WeaponPickup>().slot2 = 0;
+        GetComponent<WeaponSync>().slot1 = 0;
+        GetComponent<WeaponSync>().slot2 = 0;
         player.Die();
 
     }
