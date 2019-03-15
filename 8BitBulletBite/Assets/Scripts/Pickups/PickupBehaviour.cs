@@ -3,35 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PickupBehaviour : NetworkBehaviour {
-
-    BoxCollider2D coll;
-    SpriteRenderer sRend;
-
+public class PickupBehaviour : NetworkBehaviour
+{
     public float timer = 5f;
-    private void Start() {
+
+    private BoxCollider2D coll;
+    private SpriteRenderer spriteRenderer;
+
+    private void Start()
+    {
         coll = GetComponent<BoxCollider2D>();
-        sRend = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void DisableObj() {
+    public void Disable()
+    {
         RpcDisable();
-        Invoke("EnableObj", timer);
-
+        Invoke("Enable", timer);
     }
 
-    void EnableObj() {
+    private void Enable()
+    {
         RpcEnable();
     }
 
     [ClientRpc]
-    void RpcDisable() {
+    private void RpcDisable()
+    {
         coll.enabled = false;
-        sRend.enabled = false;
+        spriteRenderer.enabled = false;
     }
     [ClientRpc]
-    void RpcEnable() {
+    private void RpcEnable()
+    {
         coll.enabled = true;
-        sRend.enabled = true;
+        spriteRenderer.enabled = true;
     }
 }
