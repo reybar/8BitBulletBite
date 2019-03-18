@@ -5,8 +5,6 @@ using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour
 {
-
-
     public int jumpVelocity = 8;
     public int movementSpeed = 20;
     public int acceleration = 50;
@@ -19,10 +17,12 @@ public class PlayerController : NetworkBehaviour
 
     private float moveDir;
     private bool facingRight = true;
+    [SerializeField]
     private Transform characterBody;
 
     private bool isGrounded = false;
     public LayerMask whatIsGround;
+    [SerializeField]
     private Transform groundChecker;
     private float collisionRadius = 0.2f;
 
@@ -30,6 +30,7 @@ public class PlayerController : NetworkBehaviour
     public float wallJumpTime = 0.5f;
     private bool wallRide = false;
     public LayerMask whatIsWall;
+    [SerializeField]
     public Transform wallChecker;
 
     private bool extraJump = false;
@@ -37,24 +38,16 @@ public class PlayerController : NetworkBehaviour
     [SyncVar(hook = "OnUpdateScale")]
     private float scale;
 
-
-
-    // Use this for initialization
     void Start()
     {
         rBody = GetComponent<Rigidbody2D>();
-        characterBody = transform.Find("Body");
-        groundChecker = characterBody.transform.Find("Ground Checker");
-        wallChecker = characterBody.transform.Find("Wall Checker");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!isLocalPlayer) {
             return;
         }
-
         CollisionChecking();
 
         if (!isInMotion) {
@@ -62,38 +55,34 @@ public class PlayerController : NetworkBehaviour
                 rBody.velocity = new Vector2(rBody.velocity.x * 0.5f, rBody.velocity.y);
             }
             Jump();
-            Dashing();
+            Dash();
             WallJumping();
         }
     }
 
-    private void FixedUpdate()
+    private void InputManager()
     {
 
+    }
+
+    private void FixedUpdate()
+    {
         if (!isLocalPlayer) {
             return;
         }
-
         if (!isInMotion) {
-
-            //max speed
             rBody.velocity = new Vector2(Mathf.Clamp(rBody.velocity.x, -movementSpeed, movementSpeed), rBody.velocity.y);
-
             Run();
             Falling();
         }
     }
 
-
-
     void Flip()
     {
         facingRight = !facingRight;
         characterBody.transform.localScale = new Vector2(characterBody.transform.localScale.x * -1, characterBody.transform.localScale.y);
-
         CmdScale(characterBody.transform.localScale.x);
     }
-
 
     [Command]
     void CmdScale(float newScale)
@@ -109,25 +98,18 @@ public class PlayerController : NetworkBehaviour
 
     void Run()
     {
-
-
-
         moveDir = Input.GetAxis("Horizontal");
-
         if (isGrounded) {
             rBody.AddForce(new Vector2(moveDir, 0) * acceleration);
         } else {
             rBody.AddForce(new Vector2(moveDir, 0) * (acceleration - 10));
         }
 
-
         if (moveDir > 0 && !facingRight) {
             Flip();
         } else if (moveDir < 0 && facingRight) {
             Flip();
         }
-
-
     }
 
     void Jump()
@@ -169,12 +151,10 @@ public class PlayerController : NetworkBehaviour
     void Falling()
     {
         if (wallRide) {
-
             rBody.gravityScale = 3f;
         } else if (rBody.velocity.y < 0) {
             rBody.gravityScale = gravityMultiplier;
         } else if (rBody.velocity.y > 0 && !Input.GetButton("Jump")) {
-
             rBody.gravityScale = gravityMultiplier;
         } else if (rBody.velocity.y > 0) {
             rBody.gravityScale = 3f;
@@ -183,44 +163,34 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    void Dashing()
+    void Dash()
     {
         if (Input.GetButtonDown("Dash") && !dashCD) {
-
             dashCD = true;
             isInMotion = true;
             rBody.gravityScale = 0;
             rBody.velocity = new Vector2(0, rBody.velocity.y);
-
             if (facingRight) {
                 rBody.AddForce(Vector2.right * dashVelocity, ForceMode2D.Impulse);
             } else {
                 rBody.AddForce(Vector2.left * dashVelocity, ForceMode2D.Impulse);
             }
-
-            StartCoroutine(Dash(dashTime));
-
-
+            StartCoroutine(Dashing(dashTime));
         }
-
     }
 
-    IEnumerator Dash(float dashTime)
+    IEnumerator Dashing(float dashTime)
     {
         yield return new WaitForSeconds(dashTime);
         rBody.gravityScale = 1;
         isInMotion = false;
-
         yield return new WaitForSeconds(1);
         dashCD = false;
     }
 
-
-
     void CollisionChecking()
     {
         isGrounded = Physics2D.OverlapCircle(groundChecker.position, collisionRadius, whatIsGround);
-
         if (isGrounded) {
             extraJump = true;
             wallRide = false;
@@ -232,4 +202,3 @@ public class PlayerController : NetworkBehaviour
         }
     }
 }
-
