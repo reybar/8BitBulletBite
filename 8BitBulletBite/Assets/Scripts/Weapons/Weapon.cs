@@ -112,7 +112,7 @@ public class Weapon : MonoBehaviour
 
     IEnumerator Setup()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.14f);
         ready = true;
     }
 }

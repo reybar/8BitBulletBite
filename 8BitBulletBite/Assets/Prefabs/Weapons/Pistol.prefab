@@ -114,10 +114,10 @@ MonoBehaviour:
   weaponThrown: {fileID: 1866839047407942, guid: fc416c7dda131234a91d5711af3baafd,
     type: 2}
   bullet: {fileID: 1895733887920788, guid: d195b869723a59c4bb429130bf258abb, type: 2}
-  fireRate: 0.4
-  magSize: 13
-  ammo: 13
-  bulletSpeed: 70
+  fireRate: 0.14
+  magSize: 16
+  ammo: 16
+  bulletSpeed: 500
   bulletDamage: 2
   throwSpeed: 30
   throwDamage: 5

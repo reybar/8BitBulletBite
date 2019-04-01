@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class PlayerController : NetworkBehaviour
 {
     public int jumpVelocity = 8;
-    public int movementSpeed = 20;
+    public int maxMovementSpeed = 20;
     public int acceleration = 50;
     public int gravityMultiplier = 3;
 
@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     private bool isInMotion = false;
     private bool dashCD = false;
 
-    private float moveDir;
+    private float moveDirection;
     private bool facingRight = true;
     [SerializeField]
     private Transform characterBody;
@@ -27,57 +27,102 @@ public class PlayerController : NetworkBehaviour
     private float collisionRadius = 0.2f;
 
     public float wallJumpVelocity = 30f;
-    public float wallJumpTime = 0.5f;
+    public float wallJumpDuration = 0.5f;
     private bool wallRide = false;
     public LayerMask whatIsWall;
     [SerializeField]
     public Transform wallChecker;
 
-    private bool extraJump = false;
-    private Rigidbody2D rBody;
+    private bool doubleJump = false;
+    private Rigidbody2D rigidBody;
     [SyncVar(hook = "OnUpdateScale")]
     private float scale;
 
-    void Start()
+    private void Start()
     {
-        rBody = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void Update()
     {
         if (!isLocalPlayer) {
             return;
         }
-        CollisionChecking();
 
         if (!isInMotion) {
-            if (isGrounded && moveDir == 0) {
-                rBody.velocity = new Vector2(rBody.velocity.x * 0.5f, rBody.velocity.y);
-            }
+            CollisionChecking();
+            MaxSpeedManager();
+            GravityPull();
+            SlowDown();
+            Movement();
+        }
+    }
+
+    private void CollisionChecking()
+    {
+        isGrounded = Physics2D.OverlapCircle(groundChecker.position, collisionRadius, whatIsGround);
+        wallRide = Physics2D.OverlapCircle(wallChecker.position, collisionRadius, whatIsWall);
+        if (isGrounded || wallRide) {
+            doubleJump = true;
+        }
+    }
+
+    private void MaxSpeedManager()
+    {
+        rigidBody.velocity = new Vector2(Mathf.Clamp(rigidBody.velocity.x, -maxMovementSpeed, maxMovementSpeed), rigidBody.velocity.y);
+    }
+
+    private void GravityPull()
+    {
+        if (wallRide) {
+            rigidBody.gravityScale = 3f;
+        } else if (rigidBody.velocity.y < 0) {
+            rigidBody.gravityScale = gravityMultiplier * 1.5f;
+        } else if (rigidBody.velocity.y > 0 && !Input.GetButton("Jump")) {
+            rigidBody.gravityScale = gravityMultiplier;
+        } else if (rigidBody.velocity.y > 0) {
+            rigidBody.gravityScale = 3f;
+        } else {
+            rigidBody.gravityScale = 3;
+        }
+    }
+
+    private void SlowDown()
+    {
+        if (isGrounded && moveDirection == 0) {
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x * 0.5f, rigidBody.velocity.y);
+        }
+    }
+
+    private void Movement()
+    {
+        moveDirection = Input.GetAxisRaw("Horizontal");
+        Move();
+        if (Input.GetButtonDown("Jump")) {
             Jump();
+        }
+        if (Input.GetButtonDown("Dash") && !dashCD) {
             Dash();
-            WallJumping();
         }
     }
 
-    private void InputManager()
+    private void Move()
     {
-
-    }
-
-    private void FixedUpdate()
-    {
-        if (!isLocalPlayer) {
-            return;
+        if (isGrounded) {
+            rigidBody.AddForce(new Vector2(moveDirection, 0) * acceleration);
+        } else {
+            rigidBody.AddForce(new Vector2(moveDirection, 0) * (acceleration - 10));
         }
-        if (!isInMotion) {
-            rBody.velocity = new Vector2(Mathf.Clamp(rBody.velocity.x, -movementSpeed, movementSpeed), rBody.velocity.y);
-            Run();
-            Falling();
+
+        if (moveDirection > 0 && !facingRight) {
+            Flip();
+        } else if (moveDirection < 0 && facingRight) {
+            Flip();
         }
     }
 
-    void Flip()
+
+    private void Flip()
     {
         facingRight = !facingRight;
         characterBody.transform.localScale = new Vector2(characterBody.transform.localScale.x * -1, characterBody.transform.localScale.y);
@@ -85,120 +130,79 @@ public class PlayerController : NetworkBehaviour
     }
 
     [Command]
-    void CmdScale(float newScale)
+    private void CmdScale(float newScale)
     {
         scale = newScale;
     }
 
-    void OnUpdateScale(float newScale)
+    private void OnUpdateScale(float newScale)
     {
         scale = newScale;
         characterBody.transform.localScale = new Vector2(scale, characterBody.transform.localScale.y);
     }
 
-    void Run()
+    private void Jump()
     {
-        moveDir = Input.GetAxis("Horizontal");
         if (isGrounded) {
-            rBody.AddForce(new Vector2(moveDir, 0) * acceleration);
+            RegularJump();
+        } else if (wallRide) {
+            WallJump();
+        } else if (doubleJump) {
+            DoubleJump();
+        }
+    }
+
+    private void RegularJump()
+    {
+        rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
+        rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
+    }
+
+    private void WallJump()
+    {
+        isInMotion = true;
+        rigidBody.velocity = new Vector2(0, 0);
+        if (facingRight) {
+            Flip();
+            rigidBody.AddForce(new Vector2(-wallJumpVelocity, wallJumpVelocity - 5), ForceMode2D.Impulse);
         } else {
-            rBody.AddForce(new Vector2(moveDir, 0) * (acceleration - 10));
-        }
-
-        if (moveDir > 0 && !facingRight) {
             Flip();
-        } else if (moveDir < 0 && facingRight) {
-            Flip();
+            rigidBody.AddForce(new Vector2(wallJumpVelocity, wallJumpVelocity - 5), ForceMode2D.Impulse);
         }
+        StartCoroutine(WallJumping(wallJumpDuration));
     }
 
-    void Jump()
+    private IEnumerator WallJumping(float walljumpTime)
     {
-        if (Input.GetButtonDown("Jump") && !wallRide) {
-            if (isGrounded) {
-                rBody.velocity = new Vector2(rBody.velocity.x, 0);
-                rBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
-            } else if (!isGrounded && extraJump) {
-                rBody.velocity = new Vector2(rBody.velocity.x, 0);
-                rBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
-                extraJump = false;
-            }
-        }
-    }
-
-    void WallJumping()
-    {
-        if (Input.GetButtonDown("Jump") && wallRide) {
-            isInMotion = true;
-            rBody.velocity = new Vector2(0, 0);
-            if (facingRight) {
-                Flip();
-                rBody.AddForce(new Vector2(-wallJumpVelocity, wallJumpVelocity - 5), ForceMode2D.Impulse);
-            } else {
-                Flip();
-                rBody.AddForce(new Vector2(wallJumpVelocity, wallJumpVelocity - 5), ForceMode2D.Impulse);
-            }
-            StartCoroutine(WallJump(wallJumpTime));
-        }
-    }
-
-    IEnumerator WallJump(float walljumpTime)
-    {
-        yield return new WaitForSeconds(wallJumpTime);
+        yield return new WaitForSeconds(wallJumpDuration);
         isInMotion = false;
     }
 
-    void Falling()
+    private void DoubleJump()
     {
-        if (wallRide) {
-            rBody.gravityScale = 3f;
-        } else if (rBody.velocity.y < 0) {
-            rBody.gravityScale = gravityMultiplier;
-        } else if (rBody.velocity.y > 0 && !Input.GetButton("Jump")) {
-            rBody.gravityScale = gravityMultiplier;
-        } else if (rBody.velocity.y > 0) {
-            rBody.gravityScale = 3f;
+        rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
+        rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
+        doubleJump = false;
+    }
+
+    private void Dash()
+    {
+        dashCD = true;
+        isInMotion = true;
+        rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
+        if (facingRight) {
+            rigidBody.AddForce(Vector2.right * dashVelocity, ForceMode2D.Impulse);
         } else {
-            rBody.gravityScale = 1f;
+            rigidBody.AddForce(Vector2.left * dashVelocity, ForceMode2D.Impulse);
         }
+        StartCoroutine(Dashing(dashTime));
     }
 
-    void Dash()
-    {
-        if (Input.GetButtonDown("Dash") && !dashCD) {
-            dashCD = true;
-            isInMotion = true;
-            rBody.gravityScale = 0;
-            rBody.velocity = new Vector2(0, rBody.velocity.y);
-            if (facingRight) {
-                rBody.AddForce(Vector2.right * dashVelocity, ForceMode2D.Impulse);
-            } else {
-                rBody.AddForce(Vector2.left * dashVelocity, ForceMode2D.Impulse);
-            }
-            StartCoroutine(Dashing(dashTime));
-        }
-    }
-
-    IEnumerator Dashing(float dashTime)
+    private IEnumerator Dashing(float dashTime)
     {
         yield return new WaitForSeconds(dashTime);
-        rBody.gravityScale = 1;
         isInMotion = false;
         yield return new WaitForSeconds(1);
         dashCD = false;
-    }
-
-    void CollisionChecking()
-    {
-        isGrounded = Physics2D.OverlapCircle(groundChecker.position, collisionRadius, whatIsGround);
-        if (isGrounded) {
-            extraJump = true;
-            wallRide = false;
-        } else {
-            wallRide = Physics2D.OverlapCircle(wallChecker.position, collisionRadius, whatIsWall);
-            if (wallRide) {
-                extraJump = true;
-            }
-        }
     }
 }

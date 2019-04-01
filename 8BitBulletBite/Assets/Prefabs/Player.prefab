@@ -291,7 +291,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1975222013761758
 GameObject:
   m_ObjectHideFlags: 1
@@ -432,7 +432,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 13
+  orthographic size: 17
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -726,7 +726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 2
-  m_SendInterval: 0.11111111
+  m_SendInterval: 0.033333335
   m_SyncRotationAxis: 3
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -793,7 +793,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1586880943820970}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95575e2bd30453748a5df0bb64ea739e, type: 3}
   m_Name: 
@@ -1068,7 +1068,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpVelocity: 20
-  movementSpeed: 20
+  maxMovementSpeed: 20
   acceleration: 50
   gravityMultiplier: 10
   dashVelocity: 50
@@ -1079,7 +1079,7 @@ MonoBehaviour:
     m_Bits: 4294967039
   groundChecker: {fileID: 4490009956102642}
   wallJumpVelocity: 25
-  wallJumpTime: 0.3
+  wallJumpDuration: 0.3
   whatIsWall:
     serializedVersion: 2
     m_Bits: 1024

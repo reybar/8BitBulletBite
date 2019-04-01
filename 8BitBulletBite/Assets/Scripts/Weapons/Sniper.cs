@@ -32,8 +32,6 @@ public class Sniper : Weapon
         } else {
             laserRenderer.SetPosition(0, laser.transform.position);
             laserRenderer.SetPosition(1, laser.transform.position + transform.right * 30);
-
-            //TODO laser end at screen edge
         }
     }
 }

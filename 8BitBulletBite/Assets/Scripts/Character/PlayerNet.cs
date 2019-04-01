@@ -8,45 +8,49 @@ using System.Collections;
 [System.Serializable]
 public class ToggleEvent : UnityEvent<bool> { }
 
-public class PlayerNet : NetworkBehaviour {
-    [SerializeField] ToggleEvent onToggleShared;
-    [SerializeField] ToggleEvent onToggleLocal;
-    [SerializeField] ToggleEvent onToggleRemote;
-    [SerializeField] float respawnTime = 5f;
+public class PlayerNet : NetworkBehaviour
+{
+    [SerializeField]
+    ToggleEvent onToggleShared;
+    [SerializeField]
+    ToggleEvent onToggleLocal;
+    [SerializeField]
+    ToggleEvent onToggleRemote;
+    [SerializeField]
+    float respawnTime = 5f;
 
     public GameObject mainCamera;
 
 
-    void Start() {
+    void Start()
+    {
         mainCamera = Camera.main.gameObject;
-
         EnablePlayer();
     }
 
-    void DisablePlayer() {
-        if(isLocalPlayer) {
+    void DisablePlayer()
+    {
+        if (isLocalPlayer) {
             mainCamera.SetActive(true);
 
         }
-
         onToggleShared.Invoke(false);
 
-        if(isLocalPlayer)
+        if (isLocalPlayer)
             onToggleLocal.Invoke(false);
         else
             onToggleRemote.Invoke(false);
     }
 
-    void EnablePlayer() {
-
+    void EnablePlayer()
+    {
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
-        if(isLocalPlayer) {
+        if (isLocalPlayer) {
             mainCamera.SetActive(false);
         }
-
         onToggleShared.Invoke(true);
 
-        if(isLocalPlayer)
+        if (isLocalPlayer)
             onToggleLocal.Invoke(true);
         else {
             onToggleRemote.Invoke(true);
@@ -54,22 +58,19 @@ public class PlayerNet : NetworkBehaviour {
         }
     }
 
-    public void Die() {
-
+    public void Die()
+    {
         DisablePlayer();
-
         Invoke("Respawn", respawnTime);
     }
 
-    void Respawn() {
-        if(isLocalPlayer) {
+    void Respawn()
+    {
+        if (isLocalPlayer) {
             Transform spawn = NetworkManager.singleton.GetStartPosition();
             transform.position = spawn.position;
             transform.rotation = spawn.rotation;
-
-
         }
-
         EnablePlayer();
     }
 }
