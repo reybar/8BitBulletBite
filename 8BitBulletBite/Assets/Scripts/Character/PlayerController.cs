@@ -24,7 +24,7 @@ public class PlayerController : NetworkBehaviour
     public LayerMask whatIsGround;
     [SerializeField]
     private Transform groundChecker;
-    private float collisionRadius = 0.2f;
+    private float collisionRadius = 0.5f;
 
     public float wallJumpVelocity = 30f;
     public float wallJumpDuration = 0.5f;
@@ -33,7 +33,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField]
     public Transform wallChecker;
 
-    private bool doubleJump = false;
+    private bool fallJump = false;
     private Rigidbody2D rigidBody;
     [SyncVar(hook = "OnUpdateScale")]
     private float scale;
@@ -61,9 +61,9 @@ public class PlayerController : NetworkBehaviour
     private void CollisionChecking()
     {
         isGrounded = Physics2D.OverlapCircle(groundChecker.position, collisionRadius, whatIsGround);
-        wallRide = Physics2D.OverlapCircle(wallChecker.position, collisionRadius, whatIsWall);
-        if (isGrounded || wallRide) {
-            doubleJump = true;
+        wallRide = Physics2D.OverlapCircle(wallChecker.position, collisionRadius, whatIsGround);
+        if (isGrounded) {
+            fallJump = true;
         }
     }
 
@@ -74,10 +74,10 @@ public class PlayerController : NetworkBehaviour
 
     private void GravityPull()
     {
-        if (wallRide) {
+        if (wallRide ||isGrounded) {
             rigidBody.gravityScale = 3f;
         } else if (rigidBody.velocity.y < 0) {
-            rigidBody.gravityScale = gravityMultiplier * 1.5f;
+            rigidBody.gravityScale = gravityMultiplier;
         } else if (rigidBody.velocity.y > 0 && !Input.GetButton("Jump")) {
             rigidBody.gravityScale = gravityMultiplier;
         } else if (rigidBody.velocity.y > 0) {
@@ -147,8 +147,8 @@ public class PlayerController : NetworkBehaviour
             RegularJump();
         } else if (wallRide) {
             WallJump();
-        } else if (doubleJump) {
-            DoubleJump();
+        } else if (fallJump) {
+            RegularJump();
         }
     }
 
@@ -156,6 +156,7 @@ public class PlayerController : NetworkBehaviour
     {
         rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
         rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
+        fallJump = false;
     }
 
     private void WallJump()
@@ -178,11 +179,11 @@ public class PlayerController : NetworkBehaviour
         isInMotion = false;
     }
 
-    private void DoubleJump()
+    private void FallJump()
     {
         rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
         rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
-        doubleJump = false;
+        fallJump = false;
     }
 
     private void Dash()

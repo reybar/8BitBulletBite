@@ -117,7 +117,7 @@ MonoBehaviour:
   fireRate: 0.14
   magSize: 16
   ammo: 16
-  bulletSpeed: 500
+  bulletSpeed: 200
   bulletDamage: 2
   throwSpeed: 30
   throwDamage: 5

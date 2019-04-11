@@ -12,6 +12,7 @@ public class ShootingNET : NetworkBehaviour
     public int bulletDamage;
     public int throwSpeed;
     public int throwDamage;
+    public LineRenderer lineRenderer;
 
     private WeaponSync weaponSync;
 
@@ -23,12 +24,17 @@ public class ShootingNET : NetworkBehaviour
     [Command]
     public void CmdShoot(Vector2 firePoint, Vector2 direction, float rotation)
     {
-        GameObject pallet = Instantiate(bullet, firePoint, Quaternion.Euler(0, 0, rotation + 90)) as GameObject;
-        Physics2D.IgnoreCollision(pallet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-        pallet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
-        pallet.GetComponent<Projectile>().damage = bulletDamage;
-        NetworkServer.Spawn(pallet);
-        Destroy(pallet, 1);
+        RaycastHit2D hit = Physics2D.Raycast(firePoint, direction);
+        
+        if (hit.transform.gameObject.tag == "Player") {
+            hit.transform.gameObject.GetComponent<Health>().currHealth -= bulletDamage;
+        }
+        //GameObject pallet = Instantiate(bullet, firePoint, Quaternion.Euler(0, 0, rotation + 90)) as GameObject;
+        //Physics2D.IgnoreCollision(pallet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        //pallet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+        //pallet.GetComponent<Projectile>().damage = bulletDamage;
+        //NetworkServer.Spawn(pallet);
+        //Destroy(pallet, 1);
     }
 
     [Command]
