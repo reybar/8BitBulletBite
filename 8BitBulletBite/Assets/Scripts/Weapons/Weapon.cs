@@ -76,7 +76,7 @@ public class Weapon : MonoBehaviour
 
     private void InputManager()
     {
-        if (Input.GetButton("Fire1") && (Time.time > (fireRate + lastShot)) && ammo > 0 && !reloading && ready) {
+        if (Input.GetButtonDown("Fire1") && (Time.time > (fireRate + lastShot)) && ammo > 0 && !reloading && ready) {
             Shoot();
         }
         if (Input.GetButtonDown("Throw")) {

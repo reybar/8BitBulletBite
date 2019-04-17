@@ -24,17 +24,36 @@ public class ShootingNET : NetworkBehaviour
     [Command]
     public void CmdShoot(Vector2 firePoint, Vector2 direction, float rotation)
     {
-        RaycastHit2D hit = Physics2D.Raycast(firePoint, direction);
-        
+        RaycastHit2D hit = Physics2D.Raycast(firePoint, direction, 100);
+
         if (hit.transform.gameObject.tag == "Player") {
             hit.transform.gameObject.GetComponent<Health>().currHealth -= bulletDamage;
         }
-        //GameObject pallet = Instantiate(bullet, firePoint, Quaternion.Euler(0, 0, rotation + 90)) as GameObject;
-        //Physics2D.IgnoreCollision(pallet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-        //pallet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
-        //pallet.GetComponent<Projectile>().damage = bulletDamage;
-        //NetworkServer.Spawn(pallet);
-        //Destroy(pallet, 1);
+        if (hit.collider == null) {
+            RpcShoot(firePoint, direction, hit.point, false);
+        } else {
+            RpcShoot(firePoint, direction, hit.point, true);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcShoot(Vector2 firePoint, Vector2 direction, Vector2 hitPoint, bool targetHit)
+    {
+        if (targetHit) {
+            lineRenderer.SetPosition(0, firePoint);
+            lineRenderer.SetPosition(1, hitPoint);
+        } else {
+            lineRenderer.SetPosition(0, firePoint);
+            lineRenderer.SetPosition(1, firePoint + direction * 100);
+        }
+        StartCoroutine(BulletTrail());
+    }
+
+    IEnumerator BulletTrail()
+    {
+        lineRenderer.enabled = true;
+        yield return new WaitForSeconds(0.02f);
+        lineRenderer.enabled = false;
     }
 
     [Command]
