@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Weapon : MonoBehaviour
+public abstract class Weapon : MonoBehaviour
 {
     public Transform firePoint;
     public GameObject weaponThrown;
@@ -24,7 +24,7 @@ public class Weapon : MonoBehaviour
     private float projectileRotation;
     private Vector2 projectileDirection;
 
-    public virtual void Start()
+    private void Start()
     {
         player = transform.root.gameObject;
         EquipWeapon();
@@ -58,7 +58,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public virtual void Update()
+    private void Update()
     {
         if (!player.GetComponent<NetworkIdentity>().isLocalPlayer) {
             return;
@@ -67,7 +67,7 @@ public class Weapon : MonoBehaviour
         InputManager();
     }
 
-    void Aim()
+    private void Aim()
     {
         projectileDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - player.transform.position;
         projectileDirection.Normalize();

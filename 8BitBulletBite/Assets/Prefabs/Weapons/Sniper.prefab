@@ -36,6 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4308956642561856}
   - component: {fileID: 114753542088699058}
+  - component: {fileID: 114142301193517830}
   m_Layer: 8
   m_Name: Sniper
   m_TagString: Weapon
@@ -129,6 +130,22 @@ Transform:
   m_Father: {fileID: 4308956642561856}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114142301193517830
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1692285900092876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d787fd5d5ada6841ab4458ed1f74ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  laserCollision:
+    serializedVersion: 2
+    m_Bits: 1335
+  laser: {fileID: 4099736757201814}
+  laserRenderer: {fileID: 120038092069112302}
 --- !u!114 &114753542088699058
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -246,7 +263,7 @@ LineRenderer:
     alignment: 0
     textureMode: 0
     generateLightingData: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
 --- !u!212 &212378711768976214
 SpriteRenderer:

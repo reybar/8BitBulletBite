@@ -5,20 +5,17 @@ using UnityEngine;
 public class HPbar : MonoBehaviour {
 
     public GameObject fill;
-    public Transform body;
+    public Health health;
     private float currHealth;
     private float maxHealth;
     private float healthFill;
 
-    // Use this for initialization
     void Start () {
-        body = transform.parent;
-        maxHealth = body.GetComponent<Health>().maxHealth;
+        maxHealth = health.maxHealth;
     }
 	
-	// Update is called once per frame
 	void Update () {
-        currHealth = body.GetComponent<Health>().currHealth;
+        currHealth = health.currHealth;
         healthFill = Mathf.Clamp(currHealth / maxHealth, 0, maxHealth);
         fill.transform.localScale = new Vector2(healthFill, fill.transform.localScale.y);
 	}

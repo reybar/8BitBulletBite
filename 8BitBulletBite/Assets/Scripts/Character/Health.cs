@@ -21,6 +21,7 @@ public class Health : NetworkBehaviour
     {
         currHealth = maxHealth;
     }
+
     void Update()
     {
         if (!isLocalPlayer) {
