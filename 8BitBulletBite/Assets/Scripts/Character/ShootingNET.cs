@@ -14,6 +14,9 @@ public class ShootingNET : NetworkBehaviour
     public int throwDamage;
     public LineRenderer lineRenderer;
 
+    [SerializeField]
+    private PlayerStats playerStats;
+
     private WeaponSync weaponSync;
 
     private void Start()
@@ -27,6 +30,10 @@ public class ShootingNET : NetworkBehaviour
         RaycastHit2D hit = Physics2D.Raycast(firePoint, direction, 100);
 
         if (hit.transform.gameObject.tag == "Player") {
+            if (hit.transform.gameObject.GetComponent<Health>().currHealth <= bulletDamage) {
+                playerStats.kills++;
+                hit.transform.gameObject.GetComponent<PlayerStats>().deaths--;
+            }
             hit.transform.gameObject.GetComponent<Health>().currHealth -= bulletDamage;
         }
         if (hit.collider == null) {

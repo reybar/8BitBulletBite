@@ -8,6 +8,7 @@ public class FallToDeath : MonoBehaviour
     {
         if (coll.gameObject.tag == "Player") {
             coll.gameObject.GetComponent<Health>().currHealth = 0;
+            coll.gameObject.GetComponent<PlayerStats>().deaths--;
         }
     }
 }

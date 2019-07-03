@@ -11,6 +11,7 @@ public class SetupLocalPlayer : NetworkBehaviour {
     public Color playerColor = Color.white;
 
     ColorSwap colorSwap;
+
     /*void OnGUI()
 	{
 		if(isLocalPlayer)

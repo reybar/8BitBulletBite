@@ -20,5 +20,13 @@ public class MapTime : NetworkBehaviour
     private void Update()
     {
         timeLeft -= Time.deltaTime;
+        if (timeLeft <= 0) {
+            EndGame();
+        }
+    }
+
+    private void EndGame()
+    {
+
     }
 }

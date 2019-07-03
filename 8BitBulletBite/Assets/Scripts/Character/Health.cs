@@ -11,6 +11,9 @@ public class Health : NetworkBehaviour
     public int currHealth = 20;
     private PlayerNet player;
 
+    [SerializeField]
+    private PlayerStats playerStats;
+
     private void Awake()
     {
         player = GetComponent<PlayerNet>();
@@ -45,7 +48,6 @@ public class Health : NetworkBehaviour
         GetComponent<WeaponSync>().slot1 = 0;
         GetComponent<WeaponSync>().slot2 = 0;
         player.Die();
-
     }
 
 
