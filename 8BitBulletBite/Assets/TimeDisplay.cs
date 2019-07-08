@@ -15,7 +15,6 @@ public class TimeDisplay : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(FindObjectOfType<MapTime>());
         mapTime = FindObjectOfType<MapTime>();
     }
 

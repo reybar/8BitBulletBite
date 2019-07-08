@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Scoreboard : MonoBehaviour {
 
-    [SerializeField]
-    private GameObject[] players;
+    public GameObject[] players;
 
     [SerializeField]
     private GameObject scoreboardItem;
@@ -15,7 +14,7 @@ public class Scoreboard : MonoBehaviour {
 
 
     public void UpdateScoreboard() {
-
+        
         foreach (Transform child in scoreboardContainer) {
             Destroy(child.gameObject);
         }

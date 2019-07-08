@@ -22,9 +22,12 @@ namespace Prototype.NetworkLobby
             if (!isInGame)
                 return;
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
+            if (Input.GetKeyDown(KeyCode.Escape)) {
                 ToggleVisibility(!isDisplayed);
+            }
+
+            if (MapTime.gameEndedStatic) {
+                ToggleVisibility(true);
             }
 
         }
@@ -32,13 +35,11 @@ namespace Prototype.NetworkLobby
         public void ToggleVisibility(bool visible)
         {
             isDisplayed = visible;
-            foreach (Transform t in transform)
-            {
+            foreach (Transform t in transform) {
                 t.gameObject.SetActive(isDisplayed);
             }
 
-            if (panelImage != null)
-            {
+            if (panelImage != null) {
                 panelImage.enabled = isDisplayed;
             }
         }

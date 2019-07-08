@@ -5,6 +5,12 @@ using UnityEngine.Networking;
 
 public class MapTime : NetworkBehaviour
 {
+
+    public static bool gameEndedStatic = false;
+
+    [SyncVar]
+    public bool gameEnded = false;
+
     [SyncVar]
     public float timeLeft;
 
@@ -19,14 +25,17 @@ public class MapTime : NetworkBehaviour
     [ServerCallback]
     private void Update()
     {
-        timeLeft -= Time.deltaTime;
-        if (timeLeft <= 0) {
-            EndGame();
+        if (!gameEnded) {
+            timeLeft -= Time.deltaTime;
+            if (timeLeft <= 0) {
+                EndGame();
+            }
         }
     }
 
     private void EndGame()
     {
-
+        gameEnded = true;
+        gameEndedStatic = true;
     }
 }
