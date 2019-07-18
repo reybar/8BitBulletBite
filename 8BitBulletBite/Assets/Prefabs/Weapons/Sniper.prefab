@@ -166,13 +166,9 @@ MonoBehaviour:
   ammo: 1
   bulletSpeed: 200
   bulletDamage: 10
-  throwSpeed: 30
+  throwSpeed: 50
   throwDamage: 5
-  laserCollision:
-    serializedVersion: 2
-    m_Bits: 4294966783
-  laser: {fileID: 0}
-  laserHit: {fileID: 0}
+  shootingClip: {fileID: 8300000, guid: 135030c9e236840498c8d0d08f149100, type: 3}
 --- !u!120 &120038092069112302
 LineRenderer:
   m_ObjectHideFlags: 1

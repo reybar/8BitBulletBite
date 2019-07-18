@@ -38,6 +38,9 @@ public class PlayerController : NetworkBehaviour
     [SyncVar(hook = "OnUpdateScale")]
     private float scale;
 
+    [SerializeField]
+    private AudioClip jumpClip;
+
     private void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
@@ -154,6 +157,7 @@ public class PlayerController : NetworkBehaviour
 
     private void RegularJump()
     {
+        AudioSource.PlayClipAtPoint(jumpClip,transform.position);
         rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
         rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
         fallJump = false;

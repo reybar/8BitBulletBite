@@ -15,6 +15,7 @@ public abstract class Weapon : MonoBehaviour
     public int bulletDamage;
     public int throwSpeed = 30;
     public int throwDamage = 2;
+    public AudioClip shootingClip;
 
     private GameObject player;
     private ShootingNET shootingNet;
@@ -51,7 +52,7 @@ public abstract class Weapon : MonoBehaviour
             shootingNet.bullet = bullet;
             shootingNet.bulletSpeed = bulletSpeed;
             shootingNet.bulletDamage = bulletDamage;
-            shootingNet.weapon = this.gameObject;
+            shootingNet.weapon = this;
             shootingNet.weaponThrown = weaponThrown;
             shootingNet.throwSpeed = throwSpeed;
             shootingNet.throwDamage = throwDamage;

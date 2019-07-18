@@ -1232,6 +1232,7 @@ MonoBehaviour:
   throwDamage: 0
   lineRenderer: {fileID: 120904143034825204}
   playerStats: {fileID: 114833521189347708}
+  thrownClip: {fileID: 8300000, guid: 994701b0ee87b4a4898b3be7e6208a1a, type: 3}
 --- !u!114 &114354031453245492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2113,6 +2114,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   wallChecker: {fileID: 4618412651013872}
+  jumpClip: {fileID: 8300000, guid: b899ef6a8b3f8fc44b7d682dbc72b4a7, type: 3}
 --- !u!114 &114796057327057610
 MonoBehaviour:
   m_ObjectHideFlags: 1

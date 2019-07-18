@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class ShootingNET : NetworkBehaviour
 {
-    public GameObject weapon;
+    public Weapon weapon;
     public GameObject bullet;
     public GameObject weaponThrown;
     public float bulletSpeed;
@@ -16,6 +16,8 @@ public class ShootingNET : NetworkBehaviour
 
     [SerializeField]
     private PlayerStats playerStats;
+    [SerializeField]
+    private AudioClip thrownClip;
 
     private WeaponSync weaponSync;
 
@@ -46,6 +48,7 @@ public class ShootingNET : NetworkBehaviour
     [ClientRpc]
     private void RpcShoot(Vector2 firePoint, Vector2 direction, Vector2 hitPoint, bool targetHit)
     {
+        AudioSource.PlayClipAtPoint(weapon.shootingClip, firePoint);
         if (targetHit) {
             lineRenderer.SetPosition(0, firePoint);
             lineRenderer.SetPosition(1, hitPoint);
@@ -81,6 +84,11 @@ public class ShootingNET : NetworkBehaviour
         }
         NetworkServer.Spawn(thrown);
         Destroy(thrown, 1);
+        RpcThrow(firePoint);
     }
 
+    [ClientRpc]
+    private void RpcThrow(Vector2 firePoint){
+        AudioSource.PlayClipAtPoint(thrownClip, firePoint);
+    }
 }
