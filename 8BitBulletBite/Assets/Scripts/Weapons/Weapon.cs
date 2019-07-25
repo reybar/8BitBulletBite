@@ -24,17 +24,25 @@ public abstract class Weapon : MonoBehaviour
     private float lastShot;
     private float projectileRotation;
     private Vector2 projectileDirection;
+    public ReloadReference reloadRef;
 
     private void Start()
     {
         player = transform.root.gameObject;
+        reloadRef = player.GetComponent<ReloadReference>();
         EquipWeapon();
         ammo = magSize;
     }
-
+    void OnDisable() {
+        reloadRef.Stop();
+    }
     private void OnEnable()
     {
         player = transform.root.gameObject;
+        if (player.GetComponent<ReloadReference>()) {
+            reloadRef = player.GetComponent<ReloadReference>();
+            reloadRef.Stop();
+        }
         EquipWeapon();
         reloading = false;
         if (ammo <= 0) {
@@ -105,6 +113,7 @@ public abstract class Weapon : MonoBehaviour
 
     IEnumerator Reload()
     {
+        reloadRef.Reload();
         reloading = true;
         yield return new WaitForSeconds(2);
         ammo = magSize;
