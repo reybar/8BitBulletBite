@@ -49,6 +49,7 @@ public class ShootingNET : NetworkBehaviour
     private void RpcShoot(Vector2 firePoint, Vector2 direction, Vector2 hitPoint, bool targetHit)
     {
         AudioSource.PlayClipAtPoint(weapon.shootingClip, firePoint);
+        weapon.animator.Play("Recoil");
         if (targetHit) {
             lineRenderer.SetPosition(0, firePoint);
             lineRenderer.SetPosition(1, hitPoint);

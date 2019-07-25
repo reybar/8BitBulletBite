@@ -16,6 +16,8 @@ public abstract class Weapon : MonoBehaviour
     public int throwSpeed = 30;
     public int throwDamage = 2;
     public AudioClip shootingClip;
+    public ReloadReference reloadRef;
+    public Animator animator;
 
     private GameObject player;
     private ShootingNET shootingNet;
@@ -24,7 +26,7 @@ public abstract class Weapon : MonoBehaviour
     private float lastShot;
     private float projectileRotation;
     private Vector2 projectileDirection;
-    public ReloadReference reloadRef;
+    
 
     private void Start()
     {
@@ -87,6 +89,7 @@ public abstract class Weapon : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1") && (Time.time > (fireRate + lastShot)) && ammo > 0 && !reloading && ready) {
             Shoot();
+            Debug.Log(Time.time);
         }
         if (Input.GetButtonDown("Throw")) {
             Throw();
